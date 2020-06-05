@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 
@@ -119,6 +120,17 @@ public class DeptController {
 		return true;
 		
 		 
+	}
+
+	@ResponseBody
+	@RequestMapping("/findDepts")
+	public List<Dept> findAll(){
+		List<Dept> depts = deptService.findAll();
+
+
+		return depts;
+
+
 	}
 
 }

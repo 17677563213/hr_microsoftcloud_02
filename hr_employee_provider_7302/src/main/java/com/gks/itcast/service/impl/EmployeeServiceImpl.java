@@ -38,6 +38,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public PageBean searchEmployee(Integer currentPage, Map<Object, Object> conditionMap) {
+		System.out.println("conditionMap          ++++++++++++"+conditionMap);
 		if(conditionMap.get("dept_id")==null) {
 			conditionMap.put("dept_id", null);
 			conditionMap.put("job_id", null);
@@ -86,22 +87,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 			
 			
 		}
-		
-		
+
+
+		System.out.println("employeeDao -=-----------------1"+employeeDao);
 		// ��ȡ�ܼ�¼��
 		Integer totalCount = employeeDao.getTotalCountByCondition(conditionMap);
 //		������ҳʵ��:
 		PageBean pageBean = new PageBean(currentPage, totalCount);
 		pageBean.setPageSize(2);
-		
+
 //		��ʼ����:
 		Integer startIndex = (pageBean.getCurrentPage() - 1) * pageBean.getPageSize();
 
 		conditionMap.put("startIndex", startIndex);
 		conditionMap.put("endIndex", pageBean.getPageSize());
-		 
-		
-		
+
+
 		List<Employee> items = employeeDao.getItmes(conditionMap);
 		pageBean.setItems(items);
 		pageBean.setTotalCount(totalCount);

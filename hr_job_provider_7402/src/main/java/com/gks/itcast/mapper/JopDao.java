@@ -40,6 +40,7 @@ public interface JopDao {
 	/**
 	 * @param id
 	 */
+
 	public void delete(Integer id);
 	
 	

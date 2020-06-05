@@ -72,14 +72,14 @@
 		<result property="remark" column="remark"/>
 		<result property="race" column="race"/>
 		<result property="create_date" column="create_date"/>
-	
-		<association property="dept" column="dept_id">
-			 <id property="id" column="did"/>
-			 <result property="name" column="dname"/>
-			 <result property="remark" column="dremark"/>
+
+		<association property="dept" column="dept_id" javaType="com.gks.itcast.Dept">
+			<id property="id" column="did"/>
+			<result property="name" column="dname"/>
+			<result property="remark" column="dremark"/>
 		</association>
-		
-		<association property="job" column="job_id">
+
+		<association property="job" column="job_id" javaType="com.gks.itcast.Job">
 			 <id property="id" column="jid"/>
 			 <result property="name" column="jname"/>
 			 <result property="remark" column="jremark"/>
@@ -118,8 +118,8 @@
     		INNER JOIN dept_inf d ON e.dept_id = d.ID
     		INNER JOIN job_inf j ON e.JOB_ID = j.ID
 		<where>
-			<if test="id != null">
-			      e.id = #{id}
+			<if test="_parameter != null">
+			      e.id = #{_parameter}
 			</if>
 			 
 		</where>

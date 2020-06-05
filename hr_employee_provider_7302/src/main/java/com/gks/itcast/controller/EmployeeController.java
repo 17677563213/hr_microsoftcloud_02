@@ -3,16 +3,13 @@
  */
 package com.gks.itcast.controller;
 
+import com.gks.itcast.Employee;
 import com.gks.itcast.PageBean;
 import com.gks.itcast.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 
@@ -39,58 +36,47 @@ public class EmployeeController {
 	/**
 	 * ��ҳ������ѯ
 	 * @param currentPage
-	 * @param conditionMap
-	 * @param request
 	 * @return
 	 */
+
+	@ResponseBody
 	@RequestMapping(value="/searchEmployee/{currentPage}",method = {RequestMethod.GET,RequestMethod.POST})
-	public PageBean searchEmployee(@PathVariable("currentPage") Integer currentPage,@RequestParam Map<Object, Object> conditionMap,HttpServletRequest request,@RequestParam Map<Object, Object> tipMap) {
-		System.out.println(conditionMap);
+	public PageBean searchEmployee(@PathVariable("currentPage") Integer currentPage,@RequestBody Map<Object, Object> conditionMap) {
+
+		System.out.println("employee-----------------2");
 		PageBean pageBean = employeeService.searchEmployee(currentPage, conditionMap);
-//		List<Dept> depts = deptService.findAll();
-//		List<Job> jobs = jopService.findAll();
-		request.setAttribute("pageBean", pageBean);
-//		request.setAttribute("jobs", jobs);
-//		request.setAttribute("depts", depts);
-		request.setAttribute("tipMap", tipMap);
-		
-		
-		 
-		
-		
 		return pageBean;
-		
+
 	}
 	/**
 	 * ��ת������ҳ��
 	 * @param id
-	 * @param request
+
 	 * @return
 	 */
-//	@RequestMapping(value="/toUpdateEmployee/{id}",method = RequestMethod.GET)
-//	public String toUpdateEmployee(@PathVariable("id") Integer id ,HttpServletRequest request) {
-//
-//		Employee employee = employeeService.getByIdEmployee(id);
-//		request.setAttribute("employee", employee);
-//		List<Dept> depts = deptService.findAll();
-//		List<Job> jobs = jopService.findAll();
-//		request.setAttribute("jobs", jobs);
-//		request.setAttribute("depts", depts);
-//		return "employee/showUpdateEmployee";
-//	}
+	@ResponseBody
+	@RequestMapping(value="/toUpdateEmployee/{id}",method = RequestMethod.GET)
+	public Employee toUpdateEmployee(@PathVariable("id") Integer id ) {
+
+		Employee employee = employeeService.getByIdEmployee(id);
+		return employee;
+
+
+	}
 	/**
 	 * ����
 	 * @param mapEmployee
 	 * @return
 	 */
-	@RequestMapping(value="/updateEmployee",method = RequestMethod.POST)
-	public String updateEmployee(@RequestParam Map<Object, Object> mapEmployee) {
+	@ResponseBody
+	@RequestMapping(value="/updateEmployee",method = RequestMethod.PUT)
+	public void updateEmployee(@RequestBody Map<Object, Object> mapEmployee) {
 		
 		 
 		employeeService.update(mapEmployee);
 		System.out.println(mapEmployee);
 		
-		return "redirect:searchEmployee/1";
+
 		
 		
 	}

@@ -20,69 +20,144 @@
 	<link th:href="@{/css/pager.css}" type="text/css" rel="stylesheet" />
 
 	<script type="text/javascript">
-	       $(function(){
-	    	   /** 获取上一次选中的部门数据 */
-	    	   var boxs  = $("input[type='checkbox'][id^='box_']");
-	    	   
-	    	   /** 给全选按钮绑定点击事件  */
-		    	$("#checkAll").click(function(){
-		    		// this是checkAll  this.checked是true
-		    		// 所有数据行的选中状态与全选的状态一致
-		    		boxs.attr("checked",this.checked);
-		    	})
-		    	
-	    	   /** 给数据行绑定鼠标覆盖以及鼠标移开事件  */
-		    	$("tr[id^='data_']").hover(function(){
-		    		$(this).css("backgroundColor","#eeccff");
-		    	},function(){
-		    		$(this).css("backgroundColor","#ffffff");
-		    	})
-		    	
-		    	
-	    	   /** 删除员工绑定点击事件 */
-	    	   $("#delete").click(function(){
-	    		   /** 获取到用户选中的复选框  */
-	    		   var checkedBoxs = boxs.filter(":checked");
-	    		   if(checkedBoxs.length < 1){
-	    			   $.ligerDialog.error("请选择一个需要删除的员工！");
-	    		   }else{
-	    			   /** 得到用户选中的所有的需要删除的ids */
-	    			   var ids = checkedBoxs.map(function(){
-	    				   return this.value;
-	    			   })
-	    			   
-	    			   $.ligerDialog.confirm("确认要删除吗?","删除员工",function(r){
-	    				   if(r){
-	    					   // alert("删除："+ids.get());
-	    					   // 发送请求
-	    					   window.location = "/employee/removeEmployee?ids=" + ids.get();
-	    				   }
-	    			   });
-	    		   }
-	    	   })
-	       })
-	       function pageReturn() {
+        function selectall() {//全选
+            var a = empform.checkList.length;
+            if (a != undefined){
+                for (i = 0; i < a; i++)
+                    empform.checkList[i].checked = true;
+            }
+        }
 
-		    	
-			 //获取文本框中的数据
-	 		   var pageIndex = $('#pageIndex').val() ;
-				//判断是否为数字
-				if(isNaN(pageIndex)) {
-					alert("请输入数字")
-					return ;
-				}
-	
-	 		   
-	 		   if(pageIndex*1 < 1 || pageIndex *1 > "${pageInfo.pages}"*1){
-	 			   alert("抱歉，页码范围必须在1~${pageInfo.pages}之间") ;
-	 			   return ;
-	 		   } 
-	 		   
-	 		  window.location = "/employee/selectEmployee?pageNum="+pageIndex;
-	 		   
-		}
+        function unselectall() {//取消全选
+            var a = empform.checkList.length;
+            if (a != undefined){
+                for (i = 0; i < a; i++)
+                    empform.checkList[i].checked = false;
+            }
+        }
+
+
+
+        $(function(){
+            /** 获取上一次选中的部门数据 */
+            var boxs  = $("input[type='checkbox'][id^='box_']");
+
+            /** 给全选按钮绑定点击事件  */
+            $("#checkAll").click(function(){
+                // this是checkAll  this.checked是true
+                // 所有数据行的选中状态与全选的状态一致
+                boxs.attr("checked",this.checked);
+            })
+
+            /** 给数据行绑定鼠标覆盖以及鼠标移开事件  */
+            $("tr[id^='data_']").hover(function(){
+                $(this).css("backgroundColor","#eeccff");
+            },function(){
+                $(this).css("backgroundColor","#ffffff");
+            })
+
+
+            /** 删除员工绑定点击事件 */
+            $("#delete").click(function(){
+                /** 获取到用户选中的复选框  */
+                var checkedBoxs = boxs.filter(":checked");
+                if(checkedBoxs.length < 1){
+                    $.ligerDialog.error("请选择一个需要删除的员工！");
+                }else{
+                    /** 得到用户选中的所有的需要删除的ids */
+                    var ids = checkedBoxs.map(function(){
+                        return this.value;
+                    })
+
+                    $.ligerDialog.confirm("确认要删除吗?","删除员工",function(r){
+                        if(r){
+                            // alert("删除："+ids.get());
+                            // 发送请求
+                            window.location = "/employee/delete/" + ids;
+                        }
+                    });
+                }
+            })
+
+            /** 删除员工绑定点击事件 */
+            $("#delete").click(function(){
+                var ids;
+                $("input[type=checkbox]:checked").each(function(){
+                    if(ids){
+                        ids+="," +$(this).attr('value');
+
+                    }else{
+                        ids=$(this).attr('value');
+
+                    }
+                });
+                if(!ids){
+                    $.ligerDialog.error("请选择一个需要删除的用户！");
+                }else{
+
+
+                    $.ligerDialog.confirm("确认要删除吗?","删除用户",function(r){
+                        if(r){
+
+                            window.location = "/employee/searchEmployee/"+ids;
+                        }
+                    });
+                }
+            });
+
+            //跳页:
+            $("#btnOk").click(function(){
+                var skillNumber= $("#skillTo").val()-0;
+
+                if(isNaN(skillNumber)){
+
+                    alert("必须是数字!");
+                    return ;
+                }
+
+                if(skillNumber<1||skillNumber>([[${pageBean.totalPage}]]-0)){
+                    alert("输入不合法,请重新输入(有效值:1-"+[[${pageBean.totalPage}]]+")");
+                    return ;
+                };
+
+                $("#empform").attr("action","/employee/searchEmployee/"+skillNumber);
+                $("#empform").submit();
+
+            })
+        })
+
+
+
+        function pre(){
+
+            preCount=[[${pageBean.currentPage-1}]]-0;
+            if(preCount<1){
+                alert("当前已是第一页");
+                return;
+
+            }
+            $("#empform").attr("action","/employee/searchEmployee/"+preCount);
+            $("#empform").submit();
+
+
+        }
+        function next(){
+
+            nextCount=[[${pageBean.currentPage+1}]]-0;
+            if(nextCount>([[${pageBean.totalPage}]]-0)){
+                alert("当前已是最后一页");
+                return;
+
+            }
+            $("#empform").attr("action","/employee/searchEmployee/"+nextCount);
+            $("#empform").submit();
+
+
+
+        }
 	</script>
 </head>
+
 <body>
 	<!-- 导航 -->
 	<table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -93,107 +168,146 @@
 		<td width="15" height="32"><img th:src="@{/images/main_locright.gif}" width="15" height="32"></td>
 	  </tr>
 	</table>
-	
-	<table width="100%" height="90%" border="0" cellpadding="5" cellspacing="0" class="main_tabbor">
-	  <!-- 查询区  -->
-	  <tr valign="top">
-	    <td height="30">
-		  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
-		    <tr>
-			  <td class="fftd">
-			  	<form name="empform" method="post" id="empform" th:action="@{/employee/selectEmployee}">
-				    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-					  <tr>
-					    <td class="font3">
-					    	职位：
-							    <select name="jobId" style="width:143px;">
-					    			<option value="0">--请选择职位--</option>
-					    				<option value="${job.jobId }">${job.jobName }</option>
-					    		</select>
-					    	姓名：<input type="text" name="name">
-					    	身份证号码：<input type="text" name="cardId" maxlength="18">
-					    </td>
-					  </tr>
-					  <tr>
-					    <td class="font3">
-					    	性别：
-					    		<select name="sex" style="width:143px;">
-					    			<option value="0">--请选择性别--</option>
-					    			<option value="1">男</option>
-					    			<option value="2">女</option>
-					    		</select>
-					    	手机：<input type="text" name="phone">
-					    	所属部门：<select  name="deptId" style="width:100px;">
-								   <option value="0">--部门选择--</option>
-					    				<option value="${dept.deptId }">${dept.deptName }</option>
-							</select>&nbsp;
-					    	<input type="submit" value="搜索"/>
-					    	<input id="delete" type="button" value="删除"/>
-					    </td>
-					  </tr>
-					</table>
-				</form>
-			  </td>
-			</tr>
-		  </table>
-		</td>
-	  </tr>
-	  
-	  <!-- 数据展示区 -->
-	  <tr valign="top">
-	    <td height="20">
-		  <table width="100%" border="1" cellpadding="5" cellspacing="0" style="border:#c2c6cc 1px solid; border-collapse:collapse;">
-		    <tr class="main_trbg_tit" align="center">
-			  <td><input type="checkbox" name="checkAll" id="checkAll"></td>
-			  <td>姓名</td>
-			  <td>性别</td>
-			  <td>手机号码</td>
-			  <td>邮箱</td>
-			  <td>职位</td>
-			  <td>学历</td>
-			  <td>身份证号码</td>
-			  <td>部门</td>
-			  <td>联系地址</td>
-			  <td>建档日期</td>
-			  <td align="center">操作</td>
-			</tr>
-				<tr id="data_${stat.index}" class="main_trbg" align="center">
-					<td><input type="checkbox" id="box_${stat.index}" value="${employee.id}"></td>
-					 <td>${employee.name }</td>
-					  <td>
 
-					  </td>
-					  <td>${employee.phone }</td>
-					  <td>${employee.email }</td>
-					  <td>${employee.job.jobName }</td>
-					  <td>${employee.education }</td>
-					  <td>${employee.cardId }</td>
-					  <td>${employee.dept.deptName }</td>
-					  <td>${employee.address }</td>
-					  <td>
-					  </td>
-					  <td align="center" width="40px;"><a th:href="@{/employee/updateEmployee}">
-							<img title="修改" th:src="@{/images/update.gif}"/></a>
-					  </td>
-				</tr>
-		  </table>
-		</td>
-	  </tr>
-	  <!-- 分页标签 -->
-	  <tr valign="top"><td align="center" class="font3">
-	  	 <a th:href="@{/employee/selectEmployee}">第一页</a>&nbsp;&nbsp;&nbsp;
-	  			<a th:href="@{/employee/selectEmployee}" >上一页</a>
-	  		&nbsp;&nbsp;&nbsp;<label >${pageInfo.pageNum}</label>&nbsp;&nbsp;&nbsp;
-	  		
-	  			<a th:href="@{/employee/selectEmployee}" >下一页</a>
-	  		&nbsp;&nbsp;&nbsp;
-	  		<a th:href="@{/employee/selectEmployee}">最后页</a>
-	  		&nbsp;&nbsp;&nbsp;跳转到&nbsp;&nbsp;<input id="pageIndex" size="5">&nbsp;&nbsp;<button onclick="pageReturn()">确定</button><br>
-	  		总共${pageInfo.total }条记录,当前显示
-	  		${(pageInfo.pageNum -1) * pageInfo.pageSize + 1} - 
-	  		${pageInfo.isLastPage == true?pageInfo.total:pageInfo.pageNum * pageInfo.pageSize  }
-	  </td></tr>
+
+
+	<table width="100%" height="90%" border="0" cellpadding="5" cellspacing="0" class="main_tabbor">
+		<!-- 查询区  -->
+		<form name="empform" method="post" id="empform" th:action="@{/employee/searchEmployee/1}">
+			<tr valign="top">
+				<td height="30">
+					<table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
+						<tr>
+							<td class="fftd">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td class="font3">
+											职位：
+											<select name="job_id" style="width:143px;">
+												<option value="0" >--请选择性别--</option>
+												<option th:each="job:${jobs}" th:value="${job.id}" th:text="${job.name}" th:selected="${job.id+''==conditionMap.job_id}"></option>
+
+
+											</select>
+										</td>
+										<td class="font3">
+											姓名：<input type="text" name="name" th:value="${conditionMap.name}">
+										</td>
+										<td>
+											身份证号码：<input type="text" name="card_id" maxlength="18" th:value="${conditionMap.card_id }">
+
+										</td>
+
+									</tr>
+									<tr>
+										<td class="font3">性别：
+											<select name="sex" style="width:143px;">
+												<option value="0" >--请选择性别--</option>
+												<option value="1"  th:selected="${conditionMap.sex==1+'' }">男</option>
+												<option value="2"  th:selected="${conditionMap.sex==2+'' }"   >女</option>
+											</select>
+
+
+										</td>
+										<td class="font3">
+											手机：<input type="text" name="phone" th:value="${conditionMap.phone }">
+
+
+										</td>
+										<td class="font3">
+											所属部门：
+
+											<select   name="dept_id"  >
+												<option value="0">--请选择--</option>
+												<option th:each="dept:${depts}" th:value="${dept.id}" th:text="${dept.name}" th:selected="${dept.id+'' ==conditionMap.dept_id }" ></option>
+
+
+											</select>
+
+
+
+											&nbsp;
+											<input type="submit" value="搜索"/>
+											<input id="delete" type="button" value="删除"/>
+										</td>
+
+									</tr>
+								</table>
+
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<!-- 数据展示区 -->
+			<tr valign="top">
+				<td height="20">
+					<table width="100%" border="1" cellpadding="5" cellspacing="0" style="border:#c2c6cc 1px solid; border-collapse:collapse;">
+						<tr class="main_trbg_tit" align="center">
+							<td width="70px"><input type="button" value="全选" onclick="selectall()" /><input type="button" value="取消" onclick="unselectall()" /></td>
+							<td>姓名</td>
+							<td>性别</td>
+							<td>手机号码</td>
+							<td>邮箱</td>
+							<td>职位</td>
+							<td>学历</td>
+							<td>身份证号码</td>
+							<td>部门</td>
+							<td>联系地址</td>
+							<td>建档日期</td>
+							<td align="center">操作</td>
+						</tr>
+
+							<tr id="data_${stat.index}" class="main_trbg" align="center" th:each="employee : ${pageBean.items}">
+
+								<td><input type="checkbox" id="box_${stat.index}" value="${employee.id}" name="checkList"></td>
+								<td th:text="${employee.name}">${employee.name }</td>
+								<td>
+
+								</td>
+								<td th:text="${employee.phone}">${employee.phone }</td>
+								<td th:text="${employee.email}">${employee.email }</td>
+								<td th:text="${employee.job.name}">${employee.job.name }</td>
+								<td th:text="${employee.education}">${employee.education }</td>
+								<td th:text="${employee.card_id}">${employee.card_id }</td>
+								<td th:text="${employee.dept.name }">${employee.dept.name }</td>
+								<td th:text="${employee.address}">${employee.address }</td>
+								<td th:text="${employee.create_date}">
+
+								</td>
+								<td align="center" width="40px;"><a th:href="@{/employee/toUpdateEmployee/}+${employee.id}">
+									<img title="修改" th:src="@{/images/update.gif}"/></a>
+								</td>
+							</tr>
+
+					</table>
+				</td>
+			</tr>
+
+			<!-- 分页标签 -->
+			<tr valign="top" >
+
+				<td align="center" class="font3" >
+					<div id="isShowsss"  th:if="${(pageBean.totalCount-0)!=0}">
+						<a href="javaScript:pre()"> 上一页</a>
+						<span>[[${pageBean.currentPage}]]</span>
+						<a href="javaScript:next()">下一页</a> &nbsp;
+						跳转到: <input type="text" size="5" id="skillTo">  <button id="btnOk">确定</button>  &nbsp;
+						总记录数: [[${pageBean.totalCount}]] &nbsp;
+						总页数: [[${pageBean.totalPage}]] &nbsp;
+						当前显示: [[${(pageBean.currentPage-1)*pageBean.pageSize+1}]]
+						- [[${pageBean.currentPage == pageBean.totalPage ? pageBean.totalCount : pageBean.currentPage*pageBean.pageSize
+						}]]
+
+
+					</div>
+
+
+				</td>
+
+			</tr>
+		</form>
 	</table>
-	<div style="height:10px;"></div>
 </body>
 </html>

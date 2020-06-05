@@ -8,12 +8,9 @@ import com.gks.itcast.PageBean;
 import com.gks.itcast.service.JopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 /**
@@ -37,7 +34,7 @@ public class JobController {
 	}
 	@ResponseBody
 	@RequestMapping(value="/selectJob/{currentPage}",method = {RequestMethod.GET,RequestMethod.POST} )
-	public PageBean PageBean(HttpServletRequest request,Job job,@PathVariable("currentPage") Integer currentPage) {
+	public PageBean PageBean( @RequestBody Job job, @PathVariable("currentPage") Integer currentPage) {
 	  
 		
 		
@@ -47,8 +44,7 @@ public class JobController {
  
 	 
 		 
-		request.setAttribute("pageBean", pageBean);
-		request.setAttribute("tipsJob", job);
+
 		 
 		
 		return pageBean;
@@ -58,33 +54,34 @@ public class JobController {
 	/**
 	 * id��ѯ
 	 * @param id
-	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value="/toUpdateJob/{id}",method = RequestMethod.GET)
-	public String toUpdateJob(@PathVariable("id") Integer id,HttpServletRequest request) {
+	@ResponseBody
+	public Job toUpdateJob(@PathVariable("id") Integer id) {
 		Job job =jobService.getJobById(id);
+		return job;
 	 
 		
-		request.setAttribute("job", job);
+
 		
 		
 		
-		
-		return "job/showUpdateJob";
+
 	}
 	/**
 	 * ����
 	 * @param job
 	 * @return
 	 */
-	@RequestMapping(value="/updateJob",method = RequestMethod.POST)
-	public String updateJob(Job job) {
-		 
+	@RequestMapping(value="/updateJob")
+	@ResponseBody
+	public void updateJob(@RequestBody Job job) {
+
 		jobService.update(job);
-		
-		return "redirect:selectJob/1";
-		
+
+
+
 	}
 	@RequestMapping(value="/toAddJob",method = RequestMethod.GET)
 	public String toAdd() {
@@ -92,18 +89,20 @@ public class JobController {
 		
 		return "job/showAddJob";
 	}
-	@RequestMapping(value="addJob",method = RequestMethod.POST)
-	public String addJob(Job job) {
+	@ResponseBody
+	@RequestMapping(value="addJob",method = RequestMethod.PUT)
+	public void addJob(@RequestBody  Job job) {
 		System.out.println("��Ӳ���!");
 		System.out.println(job);
-		
+
 		jobService.add(job);
-		return "redirect:selectJob/1";
+
 	}
-	
-	@RequestMapping(value="/removeJob",method = RequestMethod.GET)
-	public String removeJob(String ids) {
-		
+
+	@ResponseBody
+	@RequestMapping(value="/removeJob/{ids}",method = RequestMethod.DELETE)
+	public void removeJob(@PathVariable("ids") String ids) {
+
 		System.out.println("��Ҫɾ���ı��" + ids);
 		String[] idArray = ids.split(",");
 		System.out.println("=========================++++++++++++");
@@ -114,9 +113,19 @@ public class JobController {
 
 		}
 
-		return "redirect:selectJob/1";
-		
-		 
+
+
+
+	}
+
+	@ResponseBody
+	@RequestMapping("/findJobs")
+
+	public List<Job> findJobs(){
+
+		List<Job> jobs = jobService.findAll();
+		return jobs;
+
 	}
 
 }

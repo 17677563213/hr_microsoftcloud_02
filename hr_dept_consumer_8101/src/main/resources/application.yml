@@ -1,0 +1,17 @@
+server:
+  port: 8101
+
+  
+eureka:
+  client:
+    registerWithEureka: true # 服务注册，false表示不将本消费者注册到 Eureka 服务器
+    fetchRegistry: true # 服务发现，true从 Eureka 服务器中获取注册信息
+    serviceUrl:
+      defaultZone: http://localhost:6002/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+spring:
+  application:
+    name: consumer02
+

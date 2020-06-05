@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.gks.itcast.mapper.NoticeDao">
+	<!-- 多条件查询 -->
+	<select id="getItems" parameterType="map" resultMap="noticeResult">
+		SELECT  n.*, u.loginname
+    		FROM notice_inf n 
+    		INNER JOIN user_inf u ON n.user_id = u.id
+		<where>
+			<if test="title != null">
+				title like #{title}
+			</if>
+			<if test="content != null">
+				and content like #{content}
+			</if>
+		</where>
+		limit #{startIndex},#{endIndex}
+	</select>
+	<!--符合实体类多表映射  -->
+	<resultMap type="notice" id="noticeResult">
+		  <id property="id" column="id"/>
+		  
+		  <result property="title" column="title"/>
+		  <result property="content" column="content"/>
+		  <result property="create_date" column="create_date"/>
+		  
+		  <result property="user.loginName" column="loginname"/>
+	</resultMap>
+	
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(id) from notice_inf 
+		<where>
+			<if test="title != null">
+				title like #{title}
+			</if>
+			<if test="content != null">
+				and content like #{content}
+			</if>
+		</where>
+	
+	</select>
+	
+	<!-- 添加 -->
+	 <insert id="add" parameterType="notice" >
+   	    insert into notice_inf(title,content,user_id)
+   	    values(#{title},#{content},#{user.id})
+   </insert>
+   
+   <!-- 修改 -->
+	 <update id="update" parameterType="notice" >
+		 update notice_inf 
+		 <set>
+		 	<if test="title != null">
+		 		 title = #{title} ,
+		 	</if>
+		 	<if test="content != null">
+		 		 content = #{content} ,
+		 	</if>
+		 </set>
+		 where id = #{id}
+	</update>
+</mapper>

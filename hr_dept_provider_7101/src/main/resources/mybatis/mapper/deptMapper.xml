@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.gks.itcast.mapper.DeptDao">
+	<!-- 测试 -->
+	<select id="findAll" resultType="dept">
+		select * from dept_inf
+	
+	</select>
+	<!--总记录数  -->
+	<select id="getTotalCount" resultType="int" parameterType="map">
+		select count(id) from dept_inf 
+		<where>
+			<if test="name!=null">
+				name like #{name}
+			</if>
+		</where>
+	
+	</select>
+	<!-- 分页模糊查询 -->
+	<select id="getItems"  resultType="dept"  parameterType="map">
+		SELECT * FROM dept_inf   
+		<where>
+			<if test="name!=null">
+				name like #{name}
+			</if>
+		</where>
+		 LIMIT #{startIndex},#{endIndex};
+	</select>
+
+	<!-- 更新 -->
+	<update id="upate" parameterType="dept" >
+		update dept_inf 
+		 <set>
+		 	<if test="name != null">
+		 		 name = #{name} ,
+		 	</if>
+		 	<if test="remark != null">
+		 		 remark = #{remark} 
+		 	</if>
+		 </set>
+		 where id = #{id}
+	
+	</update>
+	<!-- 添加 -->
+	<insert id="add" parameterType="dept">
+		INSERT INTO dept_inf  (`NAME`, `REMARK`)  VALUES  (#{name}, #{remark}) ;
+	
+	</insert>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="int">
+		delete  from dept_inf 
+		
+		<where>
+			<if test="_parameter!=null">
+				id=#{_parameter}
+			</if>
+		</where>
+	
+	</delete>
+	
+ 	
+</mapper>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.gks.itcast.mapper.EmployeeDao">
+<!-- 根据deptId查询 -->
+	<select id="getEmployeeByDeptId" parameterType="int" resultType="employee">
+		select * from employee_inf where dept_id=#{id}
+	
+	</select>
+<!-- 根据deptId查询 -->
+	<select id="getEmployeeByJobId" parameterType="int" resultType="employee">
+		select * from employee_inf where job_id=#{id}
+	
+	</select>
+<!-- 删除 -->
+	<delete id="delete" parameterType="int">
+		delete from employee_inf where id=#{id}
+	
+	</delete>
+ 
+<!-- 添加 -->
+   <insert id="add" parameterType="map" >
+   	    insert into employee_inf(dept_id,job_id,name,card_id,address,post_code,tel,phone,qq_num,email,sex,party,birthday,race,education,speciality,hobby,remark)
+   	    values(#{dept_id},#{job_id},#{name},#{card_id},#{address},#{postCode},#{tel},#{phone},#{qq_num},#{email},#{sex},#{party},#{birthday},#{race},#{education},#{speciality},#{hobby},#{remark})
+   </insert>
+
+<!-- 多条件查询 -->
+	<select id="getItmes" parameterType="map" resultMap="Items">
+		SELECT e.*,d.ID did ,d.NAME dname,d.REMARK dremark,j.id jid ,j.NAME jname,j.REMARK jremark
+    		FROM employee_inf e 
+    		INNER JOIN dept_inf d ON e.dept_id = d.ID
+    		INNER JOIN job_inf j ON e.JOB_ID = j.ID
+		<where>
+			<if test="dept_id != null">
+			      dept_id = #{dept_id}
+			</if>
+			<if test="name != null">
+				and e.name like #{name}
+			</if>
+			<if test="phone != null">
+				and phone like #{phone}
+			</if>
+			<if test="card_id != null">
+				and card_id like #{card_id}
+			</if>
+			<if test="sex != null">
+				and sex = #{sex}
+			</if>
+			<if test="job_id != null">
+				and job_id = #{job_id}
+			</if>
+		</where>
+		limit #{startIndex},#{endIndex}
+	</select>
+	
+	<!-- 指定封装的规则 -->
+	<resultMap type="employee" id="Items">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="card_id" column="card_id"/>
+		<result property="address" column="address"/>
+		<result property="postCode" column="post_code"/>
+		<result property="tel" column="tel"/>
+		<result property="phone" column="phone"/>
+		<result property="qq_num" column="qq_num"/>
+		<result property="email" column="email"/>
+		<result property="sex" column="sex"/>
+		<result property="party" column="party"/>
+		<result property="birthday" column="birthday"/>
+		<result property="education" column="education"/>
+		<result property="speciality" column="speciality"/>
+		<result property="hobby" column="hobby"/>
+		<result property="remark" column="remark"/>
+		<result property="race" column="race"/>
+		<result property="create_date" column="create_date"/>
+	
+		<association property="dept" column="dept_id">
+			 <id property="id" column="did"/>
+			 <result property="name" column="dname"/>
+			 <result property="remark" column="dremark"/>
+		</association>
+		
+		<association property="job" column="job_id">
+			 <id property="id" column="jid"/>
+			 <result property="name" column="jname"/>
+			 <result property="remark" column="jremark"/>
+		</association>
+	</resultMap>
+	
+	
+	<!-- 根据条件查询记录的个数 -->
+	<select id="getTotalCountByCondition" parameterType="map" resultType="int">
+		select count(id) from employee_inf 
+		<where>
+			<if test="dept_id != null">
+			      dept_id = #{dept_id}
+			</if>
+			<if test="name != null">
+				and name like #{name}
+			</if>
+			<if test="phone != null">
+				and phone like #{phone}
+			</if>
+			<if test="card_id != null">
+				and card_id like #{card_id}
+			</if>
+			<if test="sex != null">
+				and sex = #{sex}
+			</if>
+			<if test="job_id != null">
+				and job_id = #{job_id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getByIdEmployee" parameterType="int" resultMap="Items">
+		SELECT e.*,d.ID did ,d.NAME dname,d.REMARK dremark,j.id jid ,j.NAME jname,j.REMARK jremark
+    		FROM employee_inf e 
+    		INNER JOIN dept_inf d ON e.dept_id = d.ID
+    		INNER JOIN job_inf j ON e.JOB_ID = j.ID
+		<where>
+			<if test="id != null">
+			      e.id = #{id}
+			</if>
+			 
+		</where>
+		 
+	
+	</select>
+	
+	<!-- 添加 -->
+	 <update id="update" parameterType="map"  >
+		 update employee_inf 
+		 <set>
+		 	<if test="dept_id != null">
+		 		 dept_id = #{dept_id} ,
+		 	</if>
+		 	<if test="job_id != null">
+		 		 job_id = #{job_id} , 
+		 	</if>
+		 	<if test="name != null">
+		 		 name = #{name}, 
+		 	</if>
+		 	<if test="card_id != null">
+		 		 card_id = #{card_id}, 
+		 	</if>
+		 	<if test="address != null">
+		 		 address = #{address} ,
+		 	</if>
+		 	<if test="post_code != null">
+		 		 post_code = #{post_code} , 
+		 	</if>
+		 	<if test="tel != null">
+		 		 tel = #{tel} ,
+		 	</if>
+		 	<if test="phone != null">
+		 		 phone = #{phone}, 
+		 	</if>
+		 	<if test="qq_num != null">
+		 		 qq_num = #{qq_num} ,
+		 	</if>
+		 	<if test="email != null">
+		 		 email = #{email} ,
+		 	</if>
+		 	<if test="sex != null">
+		 		 sex = #{sex} , 
+		 	</if>
+		 	<if test="party != null">
+		 		 party = #{party} ,
+		 	</if>
+		 	<if test="birthday != null">
+		 		 birthday = #{birthday} ,
+		 	</if>
+		 	<if test="race != null">
+		 		 race = #{race} ,
+		 	</if>
+		 	<if test="education != null">
+		 		 education = #{education} ,
+		 	</if>
+		 	<if test="speciality != null">
+		 		 speciality = #{speciality} , 
+		 	</if>
+		 	<if test="hobby != null">
+		 		 hobby = #{hobby} ,
+		 	</if>
+		 	<if test="remark != null">
+		 		 remark = #{remark} 
+		 	</if>
+		 </set>
+		 where id = #{id}
+	</update>
+	 
+	
+ 	
+</mapper>

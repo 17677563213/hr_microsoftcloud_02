@@ -1,0 +1,31 @@
+server:
+  port: 7102
+  
+
+spring:
+  application:
+    name: microservice-deptService
+  datasource:
+
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///personnel?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
+
+
+eureka:
+  client:
+    registerWithEureka: true # 服务注册，false表示不将本消费者注册到 Eureka 服务器
+    fetchRegistry: true # 服务发现，true从 Eureka 服务器中获取注册信息
+    serviceUrl:
+      defaultZone: http://localhost:6001/eureka
+  instance: # 在注册中心显示地址
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+
+#数据库相关配置
+mybatis:
+  config-location: classpath:mybatis/mybatis.cfg.xml        # mybatis配置文件所在路径
+  mapper-locations: classpath:mybatis/mapper/**/*.xml       # mapper映射文件
+  type-aliases-package: com.gks.itcast
+

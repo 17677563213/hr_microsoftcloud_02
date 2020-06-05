@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.gks.itcast.mapper.DocumentDao">
+	<!--  添加-->
+	<insert id="add" parameterType="document" >
+   	    insert into document_inf(title,filename,remark,user_id)
+   	    values(#{title},#{filename},#{remark},#{user.id})
+   </insert>
+	
+	<!-- 多条件查询 -->
+	<select id="getItems" parameterType="map" resultMap="documentResult">
+		SELECT  d.*, u.loginname
+    		FROM document_inf d
+    		INNER JOIN user_inf u ON d.user_id = u.id
+		<where>
+			<if test="title != null">
+		 		 title like #{title} 
+		 	</if>
+		</where>
+		limit #{startIndex},#{endIndex}
+	</select>
+		
+	
+	<resultMap type="document" id="documentResult">
+		  <id property="id" column="id"/>
+		  <result property="title" column="title"/>
+		  <result property="filename" column="filename"/>
+		  <result property="remark" column="remark"/>
+		  <result property="user.loginName" column="loginname"/>
+	</resultMap>
+	
+	<!-- 根据条件查询记录的个数 -->
+	<select id="getTotalCount" parameterType="map" resultType="int">
+		select count(id) from document_inf 
+		<where>
+			<if test="title != null">
+		 		 title like #{title} 
+		 	</if>
+		</where>
+	</select> 
+	<!-- 修改 -->
+	<update id="update" parameterType="document" >
+		 update document_inf 
+		 <set>
+		 	<if test="title != null">
+		 		 title = #{title} ,
+		 	</if>
+		 	<if test="filename != null">
+		 		 filename = #{filename} ,
+		 	</if>
+		 	<if test="remark != null">
+		 		 remark = #{remark} ,
+		 	</if>
+		 </set>
+		 where id = #{id}
+	</update>
+ 	
+</mapper>

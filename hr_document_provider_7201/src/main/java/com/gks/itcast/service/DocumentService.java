@@ -29,4 +29,7 @@ public interface DocumentService {
 	
 	public void add(Document document);
 
+
+	public void deleteByUid(Integer uid);
+
 }

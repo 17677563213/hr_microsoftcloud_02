@@ -27,6 +27,8 @@ public class UserController {
     private RestTemplate restTemplate;
 
     private final static  String REST_URL_PREFIX="http://microservice-userService";
+    private final static  String REST_URL_PREFIX_DOCUMENT="http://microservice-documentService";
+    private final static  String REST_URL_PREFIX_NOTICE="http://microservice-noticeService";
 
     @RequestMapping("/list/")
     public PageBean method02(){
@@ -89,7 +91,7 @@ public class UserController {
         return "/user/showUpdateUser";
 
     }
-    @RequestMapping("/updateUser")
+    @RequestMapping(value = "/updateUser",method = RequestMethod.POST)
     public String updateUser(User user){
 
     restTemplate.put(REST_URL_PREFIX + "/user/updateUser", user);
@@ -120,12 +122,34 @@ public class UserController {
 
     }
     @RequestMapping(value = "/removeUser/{ids}")
-    public String removeUser(@PathVariable("ids") String ids){
+    public String removeUser(@PathVariable("ids") String ids, HttpServletRequest request) throws InterruptedException {
+        HttpSession session = request.getSession();
         System.out.println("这是编号"+ids);
-        restTemplate.delete(REST_URL_PREFIX + "/user/addUser/"+ids);
+
+        User respUser = (User) session.getAttribute("respUser");
+
+        Boolean aBoolean = restTemplate.getForObject(REST_URL_PREFIX_DOCUMENT + "/document/deleteByUid/" + ids, Boolean.class);
+         restTemplate.delete(REST_URL_PREFIX_NOTICE + "/notice/deleteByUid/" + ids, Boolean.class);
+         Thread.sleep(100);
+        if(aBoolean){
+
+            restTemplate.delete(REST_URL_PREFIX + "/user/addUser/"+ids);
+
+        }
+
+
 
 
         return "redirect:/user/list/1";
+
+
+    }
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession();
+      session.removeAttribute("respUser");
+      return "redirect:/toLogin";
+
 
 
     }

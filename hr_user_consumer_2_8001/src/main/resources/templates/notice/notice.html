@@ -19,85 +19,131 @@
 	<script th:src="@{/js/ligerUI/js/plugins/ligerResizable.jss}" type="text/javascript"></script>
 	<link th:href="@{/css/pager.css}" type="text/css" rel="stylesheet" />
 	<script type="text/javascript">
-	$(function(){
-		
-			/** 获取上一次选中的部门数据 */
-	 	   var boxs  = $("input[type='checkbox'][id^='box_']");
-			
-	 	  /** 给全选按钮绑定点击事件  */
-	    	$("#checkAll").click(function(){
-	    		// this是checkAll  this.checked是true
-	    		// 所有数据行的选中状态与全选的状态一致
-	    		boxs.attr("checked",this.checked);
-	    	})
-	    	
-	 	  /** 给数据行绑定鼠标覆盖以及鼠标移开事件  */
-	    	$("tr[id^='data_']").hover(function(){
-	    		$(this).css("backgroundColor","#eeccff");
-	    	},function(){
-	    		$(this).css("backgroundColor","#ffffff");
-	    	})
-	    	
-	    	
-	 	   /** 删除公告绑定点击事件 */
-	 	   $("#delete").click(function(){
-	 		   /** 获取到公告选中的复选框  */
-	 		   var checkedBoxs = boxs.filter(":checked");
-	 		   if(checkedBoxs.length < 1){
-	 			   $.ligerDialog.error("请选择一个需要删除的公告！");
-	 		   }else{
-	 			   /** 得到公告选中的所有的需要删除的ids */
-	 			   var ids = checkedBoxs.map(function(){
-	 				   return this.value;
-	 			   })
-	 			   
-	 			   $.ligerDialog.confirm("确认要删除吗?","删除公告",function(r){
-	 				   if(r){
-	 					   // alert("删除："+ids.get());
-	 					   // 发送请求
-	 					   window.location = "/notice/removeNotice?ids=" + ids.get();
-	 				   }
-	 			   });
-	 		   }
-	 	   })
-		
-		/** 给预览绑定点击事件 */
-		$("a[id^='prev_'").click(function(){
-			var noticeId = this.id.replace('prev_','');
-			$.ligerDialog.open({ 
-				title:'预览公告',
-				height: 500, 
-				url: '@{/notice/previewNotice?id='+noticeId, 
-				width: 750, 
-				showMax: true, 
-				showToggle: true, 
-				showMin: true, 
-				isResize: true, 
-				slide: false 
-				});
-		})
-	 })
-	 
-	  function pageReturn() {
+        function selectall() {//全选
+            var a = empform.checkList.length;
+            if (a != undefined){
+                for (i = 0; i < a; i++)
+                    empform.checkList[i].checked = true;
+            }
+        }
 
-		    	
-			 //获取文本框中的数据
-	 		   var pageIndex = $('#pageIndex').val() ;
-				//判断是否为数字
-				if(isNaN(pageIndex)) {
-					alert("请输入数字")
-					return ;
-				}
-	
-	 		   
-	 		   if(pageIndex*1 < 1 || pageIndex *1 > "${pageInfo.pages}"*1){
-	 			   alert("抱歉，页码范围必须在1~${pageInfo.pages}之间") ;
-	 			   return ;
-	 		   } 
-	 		   
-	 		  window.location = "/notice/selectNotice?pageNum="+pageIndex+"&title=${pageNotice.title}&content=${pageNotice.content}";
-	 		   
-		}
+        function unselectall() {//取消全选
+            var a = empform.checkList.length;
+            if (a != undefined){
+                for (i = 0; i < a; i++)
+                    empform.checkList[i].checked = false;
+            }
+        }
+
+
+        $(function(){
+
+            /*测试  */
+            $("#test01").click(function(){
+                var ids;
+                $("input[type=checkbox]:checked").each(function(){
+
+                    if(ids){
+                        ids+="," +$(this).attr('value');
+
+                    }else{
+                        ids=$(this).attr('value');
+
+                    }
+
+
+                });
+
+                console.log("这是需要删除的id"+ids)
+
+            })
+
+
+            /** 获取上一次选中的部门数据 */
+            var boxs  = $("input[type='checkbox'][id^='box_']");
+
+            /** 给数据行绑定鼠标覆盖以及鼠标移开事件  */
+            $("tr[id^='data_']").hover(function(){
+                $(this).css("backgroundColor","#eeccff");
+            },function(){
+                $(this).css("backgroundColor","#ffffff");
+            })
+
+
+            /** 删除员工绑定点击事件 */
+            $("#delete").click(function(){
+                var ids;
+                $("input[type=checkbox]:checked").each(function(){
+                    if(ids){
+                        ids+="," +$(this).attr('value');
+
+                    }else{
+                        ids=$(this).attr('value');
+
+                    }
+                });
+                if(!ids){
+                    $.ligerDialog.error("请选择一个需要删除的用户！");
+                }else{
+
+
+                    $.ligerDialog.confirm("确认要删除吗?","删除用户",function(r){
+                        if(r){
+
+                            window.location = "/notice/delete/"+ids;
+                        }
+                    });
+                }
+            });
+
+            $("#btnOk").click(function(){
+                var skillNumber= $("#skillTo").val()-0;
+
+                if(isNaN(skillNumber)){
+
+                    alert("必须是数字!");
+                    return ;
+                }
+
+                if(skillNumber<1||skillNumber>([[${pageBean.totalPage}]]-0)){
+                    alert("输入不合法,请重新输入(有效值:1-"+[[${pageBean.totalPage}]]+")");
+                    return ;
+                };
+
+                $("#empform").attr("action","/notice/selectNotice/"+skillNumber);
+                $("#empform").submit();
+
+            })
+
+        });
+
+        function pre(){
+
+            preCount=[[${pageBean.currentPage-1}]]-0;
+            if(preCount<1){
+                alert("当前已是第一页");
+                return;
+
+            }
+            $("#empform").attr("action","/notice/selectNotice/"+preCount);
+            $("#empform").submit();
+
+
+        }
+        function next(){
+
+            nextCount=[[${pageBean.currentPage+1}]]-0;
+            if(nextCount>([[${pageBean.totalPage}]]-0)){
+                alert("当前已是最后一页");
+                return;
+
+            }
+            $("#empform").attr("action","/notice/selectNotice/"+nextCount);
+            $("#empform").submit();
+
+
+        }
+
 	</script>
 </head>
 <body>
@@ -110,78 +156,92 @@
 		<td width="15" height="32"><img th:src="@{/images/main_locright.gif}" width="15" height="32"></td>
 	  </tr>
 	</table>
-	
+
+
+
 	<table width="100%" height="90%" border="0" cellpadding="5" cellspacing="0" class="main_tabbor">
-	  <!-- 查询区  -->
-	  <tr valign="top">
-	    <td height="30">
-		  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
-		    <tr>
-			  <td class="fftd">
-			  	<form name="noticeform" method="post" id="noticeform" action="@{/notice/selectNotice">
-				    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-					  <tr>
-					    <td class="font3">
-					    	公告名称：<input type="text" name="title">
-					    	公告内容：<input type="text" name="content">
-					    	 <input type="submit" value="搜索"/>
-					    	<input id="delete" type="button" value="删除"/>
-					    </td>
-					  </tr>
+		<!-- 查询区  -->
+		<form name="empform" method="post" id="empform" th:action="@{/notice/selectNotice/1}">
+			<tr valign="top">
+				<td height="30">
+					<table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
+						<tr>
+							<td class="fftd">
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+										<td class="font3">
+											公告名称：<input type="text" name="title"  th:value="${conditionMap.title }">
+											公告内容：<input type="text" name="content" th:value="${conditionMap.content }">
+											<input type="submit" value="搜索"/>
+											<input id="delete" type="button" value="删除"/>
+										</td>
+									</tr>
+								</table>
+
+							</td>
+						</tr>
 					</table>
-				</form>
-			  </td>
+				</td>
 			</tr>
-		  </table>
-		</td>
-	  </tr>
-	  
-	  <!-- 数据展示区 -->
-	  <tr valign="top">
-	    <td height="20">
-		  <table width="100%" border="1" cellpadding="5" cellspacing="0" style="border:#c2c6cc 1px solid; border-collapse:collapse;">
-		    <tr class="main_trbg_tit" align="center">
-			  <td><input type="checkbox" name="checkAll" id="checkAll"></td>
-			  <td>公告名称</td>
-			  <td>公告内容</td>
-			  <td>创建时间</td>
-			  <td>公告人</td>
-			  <td>操作</td>
-			  <td>预览</td>
+
+			<!-- 数据展示区 -->
+			<tr valign="top">
+				<td height="20">
+					<table width="100%" border="1" cellpadding="5" cellspacing="0" style="border:#c2c6cc 1px solid; border-collapse:collapse;">
+						<tr class="main_trbg_tit" align="center">
+							<td width="70px"><input type="button" value="全选" onclick="selectall()" /><input type="button" value="取消" onclick="unselectall()" /></td>
+
+							<td>公告名称</td>
+							<td>公告内容</td>
+							<td>创建时间</td>
+							<td>公告人</td>
+							<td>操作</td>
+							<td>预览</td>
+						</tr>
+
+							<tr id="data_${stat.index}" align="center" class="main_trbg" th:each="notice:${pageBean.items}" >
+								<td><input type="checkbox" id="box_${stat.index}" th:value="${notice.id}" name="checkList"></td>
+								<td th:text="${notice.title }"></td>
+								<td th:text="${notice.content }">${notice.content }</td>
+								<td th:text="${notice.create_date }">
+
+								</td>
+								<td th:text="${notice.user.loginName}">${notice.user.loginName }</td>
+								<td align="center" width="40px;"><a th:href="@{/notice/toUpdateNotice/}+${notice.id}">
+									<img title="修改" th:src="@{/images/update.gif}"/></a>
+								</td>
+								<td align="center"  width="40px;"><a  id="prev_${notice.id }" th:href="@{/notice/previewNotice/}+${notice.id}">
+									<img title="预览" th:src="@{/images/prev.gif}"/></a>
+								</td>
+							</tr>
+
+
+					</table>
+				</td>
 			</tr>
-			<c:forEach items="${pageInfo.list}" var="notice" varStatus="stat">
-				<tr id="data_${stat.index}" align="center" class="main_trbg" onMouseOver="move(this);" onMouseOut="out(this);">
-					<td><input type="checkbox" id="box_${stat.index}" value="${notice.id}"></td>
-					 <td>${notice.title }</td>
-					  <td>${notice.content }</td>
-					  <td>
-					  </td>
-					  <td>${notice.user.userName }</td>
-					 <td align="center" width="40px;"><a th:href="@{/notice/updateNotice}">
-							<img title="修改" th:src="@{/images/update.gif}"/></a>
-					  </td>
-					  <td align="center"  width="40px;"><a  id="prev_${notice.id }">
-							<img title="预览" th:src="@{/images/prev.gif}"/></a>
-					  </td>
-				</tr>
-			</c:forEach>
-		  </table>
-		</td>
-	  </tr>
-	  <!-- 分页标签 -->
-	  <tr valign="top"><td align="center" class="font3">
-	  	<a th:href="@{/notice/selectNotice}">第一页</a>&nbsp;&nbsp;&nbsp;
-	  			<a th:href="@{/notice/selectNotice}" >上一页</a>
-	  		&nbsp;&nbsp;&nbsp;<label >${pageInfo.pageNum}</label>&nbsp;&nbsp;&nbsp;
-	  		
-	  			<a th:href="@{/notice/selectNotice}" >下一页</a>
-	  		&nbsp;&nbsp;&nbsp;
-	  		<a th:href="@{/notice/selectNotice}">最后页</a>
-	  		&nbsp;&nbsp;&nbsp;跳转到&nbsp;&nbsp;<input id="pageIndex" size="5">&nbsp;&nbsp;<button onclick="pageReturn()">确定</button><br>
-	  		总共${pageInfo.total }条记录,当前显示
-	  		${(pageInfo.pageNum -1) * pageInfo.pageSize + 1} - 
-	  		${pageInfo.isLastPage == true?pageInfo.total:pageInfo.pageNum * pageInfo.pageSize  }
-	  </td></tr>
+			<!-- 分页标签 -->
+			<tr valign="top" >
+
+				<td align="center" class="font3" >
+					<div id="isShowsss" th:if="${(pageBean.totalCount-0)!=0}">
+						<a href="javaScript:pre()"> 上一页</a>
+						<span>[[${pageBean.currentPage}]]</span>
+						<a href="javaScript:next('[[${pageBean.currentPage+1}]]')">下一页</a> &nbsp;
+						跳转到: <input type="text" size="5" id="skillTo">  <button id="btnOk">确定</button>  &nbsp;
+						总记录数: [[${pageBean.totalCount}]] &nbsp;
+						总页数: [[${pageBean.totalPage}]] &nbsp;
+						当前显示: [[${(pageBean.currentPage-1)*pageBean.pageSize+1}]]
+						- [[${pageBean.currentPage == pageBean.totalPage ? pageBean.totalCount : pageBean.currentPage*pageBean.pageSize
+						}]]
+
+
+					</div>
+
+
+				</td>
+
+			</tr>
+		</form>
 	</table>
 	<div style="height:10px;"></div>
 </body>

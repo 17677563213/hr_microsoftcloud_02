@@ -49,47 +49,46 @@
 				<td width="15" height="32"><img th:src="@{/images/main_locright.gif}" width="15" height="32"></td>
 			 </tr>
 		</table>
-	
+
 		<table width="100%" height="90%" border="0" cellpadding="10" cellspacing="0" class="main_tabbor">
-		  	<tr valign="top">
-			    <td>
-			    
-				 <form id="documentForm" name="documentForm" th:action="@{/document/addDocument}" enctype="multipart/form-data" method="post">
-                        <!-- 隐藏表单，flag表示添加标记 -->
-    	 			<input type="hidden" name="flag" value="2">
-				  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
-                        
-					    <tr><td class="font3 fftd">
-					              
-					                
-					                文档标题：<input type="text" name="title" size="30" id="title"/></td>
-					    </tr>
-						<tr><td class="main_tdbor"></td></tr>
-						
-						
-						<tr><td class="font3 fftd">文档描述：<br/>
-							<textarea name="remark" cols="88" rows="11" id="content"></textarea>
-						</td></tr>
-						<tr><td class="main_tdbor"></td></tr>
-						
+			<tr valign="top">
+				<td>
+
+					<form id="documentForm" name="documentForm" th:action="@{/document/add}" enctype="multipart/form-data" method="post">
+
+						<table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
+
+							<tr><td class="font3 fftd">
+
+
+								文档标题：<input type="text" name="title" size="30" id="title"/></td>
+							</tr>
+							<tr><td class="main_tdbor"></td></tr>
+
+
+							<tr><td class="font3 fftd">文档描述：<br/>
+								<textarea name="remark" cols="88" rows="11" id="content"></textarea>
+							</td></tr>
+							<tr><td class="main_tdbor"></td></tr>
+
 							<tr><td class="font3 fftd">文档：<br/>
-							<input type="file" name="file" id="file"  size="30"/>
-						</td></tr>
-						<tr><td class="main_tdbor"></td></tr>
-						
-                      
-						
-						<tr><td class="font3 fftd">
+								<input type="file" name="file" id="file"  size="30"/>
+							</td></tr>
+							<tr><td class="main_tdbor"></td></tr>
+
+
+
+							<tr><td class="font3 fftd">
 								<input type="button" id="btn" value="上传">
 								<input type="reset" value="重置">
-						</td></tr>
-						<tr><td class="main_tdbor"></td></tr>
-					
-						${message }
-				  </table>
-				  </form>
+							</td></tr>
+							<tr><td class="main_tdbor"></td></tr>
+
+
+						</table>
+					</form>
 				</td>
-		  	</tr>
+			</tr>
 		</table>
 		<div style="height:10px;"></div>
 	</body>

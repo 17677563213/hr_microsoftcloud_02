@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title>人事管理系统 ——后台管理</title>
@@ -8,13 +8,16 @@
 		<meta http-equiv="expires" content="0" />    
 		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
 		<meta http-equiv="description" content="This is my page" />
-		<link th:ref="@{fkjava.ico}" rel="shortcut icon" type="image/x-icon" />
+
 		
 	</head>
 	<body>
-		 <center><h1>${notice.title }</h1></center>
-		 <br/>
-		 ${notice.content}
+	<input type="hidden" th:value="${notice.id}">
+
+
+	<center><h1 th:text="${notice.title}">${notice.title }</h1></center>
+	<br/>
+	<span th:text=" ${notice.content}"></span>
 		
 	</body>
 </html>

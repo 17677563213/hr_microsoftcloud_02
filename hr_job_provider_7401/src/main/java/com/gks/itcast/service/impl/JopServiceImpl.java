@@ -87,16 +87,8 @@ public class JopServiceImpl implements JopService {
 	public void delete(Integer id) {
 		// TODO Auto-generated method stub
 
-//		List<Employee> employeeByJobId = employeeDao.getEmployeeByJobId(id);
-//
-//		if (employeeByJobId.size() > 0) {
-//			for (Employee employee : employeeByJobId) {
-//				employeeDao.delete(employee.getId());
-//			}
-//
-//		}
-//
-//		jobDao.delete(id);
+
+	jobDao.delete(id);
 
 	}
 

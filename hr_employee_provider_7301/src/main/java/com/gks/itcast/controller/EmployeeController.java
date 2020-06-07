@@ -100,18 +100,20 @@ public class EmployeeController {
 	 * @param mapEmployee
 	 * @return
 	 */
-	@RequestMapping(value="/addEmployee",method = RequestMethod.POST)
-	public String add(@RequestParam Map<Object, Object> mapEmployee) {
+	@ResponseBody
+	@RequestMapping(value="/addEmployee",method = RequestMethod.PUT)
+	public void add(@RequestBody Map<Object, Object> mapEmployee) {
 		
 		
 		employeeService.add(mapEmployee);
 		
 		
-		return "redirect:searchEmployee/1";
+
 		
 	}
-	@RequestMapping(value="/delete",method = RequestMethod.GET)
-	public String delete(String ids) {
+	@ResponseBody
+	@RequestMapping(value="/delete/{ids}",method = RequestMethod.DELETE)
+	public void delete(@PathVariable("ids") String ids) {
 		String[] idArray = ids.split(",");
 		System.out.println("=========================++++++++++++");
 		System.out.println(idArray);
@@ -120,8 +122,41 @@ public class EmployeeController {
 			employeeService.delete(new Integer(idArray[id]));
 
 		}
-		
-		return "redirect:searchEmployee/1";
+
+
+	}
+	@ResponseBody
+	@RequestMapping(value = "/deleteByJid/{jid}",method = RequestMethod.DELETE)
+	public void deleteByJid(@PathVariable("jid") String jid) {
+		String[] idArray = jid.split(",");
+		System.out.println("=========================++++++++++++");
+		System.out.println(idArray);
+		for (int id = 0; id < idArray.length; id++) {
+			employeeService.deleteByJid(new Integer(idArray[id]));
+
+
+
+		}
+
+
+
+
+
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/deleteByEid/{eid}",method = RequestMethod.DELETE)
+	public void deleteByEid(@PathVariable("eid") String eid) {
+		String[] idArray = eid.split(",");
+		System.out.println("=========================++++++++++++");
+		System.out.println(idArray);
+		for (int id = 0; id < idArray.length; id++) {
+			employeeService.deleteByEid(new Integer(idArray[id]));
+
+
+		}
+
+
 	}
 
 

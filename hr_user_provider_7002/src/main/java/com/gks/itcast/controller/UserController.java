@@ -138,7 +138,7 @@ public class UserController {
 
 	}
 
-
+	@ResponseBody
 	@RequestMapping(value = "/updateUser", method = RequestMethod.PUT)
 	public void updateUser(@RequestBody User user) {
 		System.out.println("修改数据===================================" + user);

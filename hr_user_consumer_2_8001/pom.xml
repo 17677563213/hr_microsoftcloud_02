@@ -35,6 +35,12 @@
 			<artifactId>hr_bean</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.gks.itcast</groupId>
+			<artifactId>hr_utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

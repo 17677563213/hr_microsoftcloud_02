@@ -57,27 +57,7 @@
             })
 
 
-            /** 删除员工绑定点击事件 */
-            $("#delete").click(function(){
-                /** 获取到用户选中的复选框  */
-                var checkedBoxs = boxs.filter(":checked");
-                if(checkedBoxs.length < 1){
-                    $.ligerDialog.error("请选择一个需要删除的员工！");
-                }else{
-                    /** 得到用户选中的所有的需要删除的ids */
-                    var ids = checkedBoxs.map(function(){
-                        return this.value;
-                    })
 
-                    $.ligerDialog.confirm("确认要删除吗?","删除员工",function(r){
-                        if(r){
-                            // alert("删除："+ids.get());
-                            // 发送请求
-                            window.location = "/employee/delete/" + ids;
-                        }
-                    });
-                }
-            })
 
             /** 删除员工绑定点击事件 */
             $("#delete").click(function(){
@@ -99,7 +79,7 @@
                     $.ligerDialog.confirm("确认要删除吗?","删除用户",function(r){
                         if(r){
 
-                            window.location = "/employee/searchEmployee/"+ids;
+                            window.location = "/employee/removeUser/"+ids;
                         }
                     });
                 }
@@ -261,7 +241,7 @@
 
 							<tr id="data_${stat.index}" class="main_trbg" align="center" th:each="employee : ${pageBean.items}">
 
-								<td><input type="checkbox" id="box_${stat.index}" value="${employee.id}" name="checkList"></td>
+								<td><input type="checkbox" id="box_${stat.index}" th:value="${employee.id}" name="checkList"></td>
 								<td th:text="${employee.name}">${employee.name }</td>
 								<td>
 
@@ -289,10 +269,10 @@
 			<tr valign="top" >
 
 				<td align="center" class="font3" >
-					<div id="isShowsss"  th:if="${(pageBean.totalCount-0)!=0}">
+					<div id="isShowsss" th:if="${(pageBean.totalCount-0)!=0}">
 						<a href="javaScript:pre()"> 上一页</a>
 						<span>[[${pageBean.currentPage}]]</span>
-						<a href="javaScript:next()">下一页</a> &nbsp;
+						<a href="javaScript:next('[[${pageBean.currentPage+1}]]')">下一页</a> &nbsp;
 						跳转到: <input type="text" size="5" id="skillTo">  <button id="btnOk">确定</button>  &nbsp;
 						总记录数: [[${pageBean.totalCount}]] &nbsp;
 						总页数: [[${pageBean.totalPage}]] &nbsp;

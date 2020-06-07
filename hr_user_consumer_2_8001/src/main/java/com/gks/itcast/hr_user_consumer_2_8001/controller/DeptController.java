@@ -2,6 +2,7 @@ package com.gks.itcast.hr_user_consumer_2_8001.controller;
 
 import com.gks.itcast.Dept;
 import com.gks.itcast.PageBean;
+import com.gks.itcast.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -27,6 +29,8 @@ public class DeptController {
     private RestTemplate restTemplate;
 
     private final static  String REST_URL_PREFIX="http://microservice-deptService";
+
+    private final static  String REST_URL_PREFIX_EMPLOYEE="http://microservice-employeeService";
 
 
     @RequestMapping(value="/selectDept/{currentPage}",method = {RequestMethod.GET,RequestMethod.POST} )
@@ -52,7 +56,7 @@ public class DeptController {
         System.out.println("update"+dept);
         return "dept/showUpdateDept";
     }
-    @RequestMapping("/updateDept")
+    @RequestMapping(value = "/updateDept",method = RequestMethod.POST)
     public String updateUser(Dept dept){
 
         restTemplate.put(REST_URL_PREFIX + "/dept/updateDept", dept);
@@ -62,8 +66,13 @@ public class DeptController {
 
     }
     @RequestMapping(value = "/removeDept/{ids}")
-    public String removeDept(@PathVariable("ids") String ids){
+    public String removeDept(@PathVariable("ids") String ids,HttpServletRequest request) throws InterruptedException {
         System.out.println("ids"+ids);
+        HttpSession session = request.getSession();
+        User respUser = (User) session.getAttribute("respUser");
+        restTemplate.delete(REST_URL_PREFIX_EMPLOYEE+"/employee/deleteByEid/"+ids);
+
+        Thread.sleep(1000);
 
        restTemplate.delete(REST_URL_PREFIX + "/dept/removeDept/" + ids);
 

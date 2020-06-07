@@ -36,4 +36,7 @@ public interface NoticeDao {
 	@Delete("delete from notice_inf where id=#{id}")
 	public void delete(Integer id);
 
+	@Delete("delete from notice_inf where USER_ID=#{uid}")
+	public void deleteByUid(Integer uid);
+
 }

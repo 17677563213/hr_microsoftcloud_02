@@ -51,22 +51,21 @@
 		  	<tr valign="top">
 			    <td>
 			    
-				 <form id="documentForm" name="documentForm" th:action="@{/document/updateDocument}" enctype="multipart/form-data" method="post">
+				 <form id="documentForm" name="documentForm" th:action="@{/document/update}" enctype="multipart/form-data" method="post">
                         <!-- 隐藏表单，flag表示添加标记 -->
-    	 			<input type="hidden" name="flag" value="2">
-    	 			<input type="hidden" name="id" value="${document.id }">
+    	 			<input type="hidden" name="id" th:value="${document.id }">
 				  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
                         
 					    <tr><td class="font3 fftd">
 					              
 					                
-					                文档标题：<input type="text" name="title" size="30" id="title" value="${document.title }"/></td>
+					                文档标题：<input type="text" name="title" size="30" id="title" th:value="${document.title }"/></td>
 					    </tr>
 						<tr><td class="main_tdbor"></td></tr>
 						
 						
 						<tr><td class="font3 fftd">文档描述：<br/>
-							<textarea name="remark" cols="88" rows="11" id="content">${document.remark }</textarea>
+							<textarea name="remark" cols="88" rows="11" id="content" th:text="${document.remark }"></textarea>
 						</td></tr>
 						<tr><td class="main_tdbor"></td></tr>
 						

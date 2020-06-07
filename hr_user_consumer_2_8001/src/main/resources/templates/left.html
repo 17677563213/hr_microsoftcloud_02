@@ -68,7 +68,7 @@
 		  <tr valign="top" id="submenu3" style="display: none">
 		    <td class="left_nav_bgshw" height="50">
 			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/employee/searchEmployee/1}" target="main">员工查询</a></img></p>
-			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/test}" target="main">添加员工</a></img></p>
+			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/employee/addEmployee}" target="main">添加员工</a></img></p>
 			</td>
 		  </tr>
 		  <tr><td height="2"></td></tr>
@@ -76,8 +76,8 @@
 		  <tr><td id="navbg4" class="left_nav_closed" ><div class="font1">公告管理</div></td></tr>
 		  <tr valign="top" id="submenu4" style="display: none">
 		    <td class="left_nav_bgshw tdbtmline" height="50">
-			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a href="@{/notice/selectNotice" target="main">公告查询</a></img></p>
-			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a href="@{/notice/addNotice?flag=1" target="main">添加公告</a></img></p>
+			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/notice/selectNotice/1}" target="main">公告查询</a></img></p>
+			  <p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/notice/toAddNotice}" target="main">添加公告</a></img></p>
 			</td>
 		  </tr>
 		  <tr><td height="2"></td></tr>
@@ -85,13 +85,13 @@
 		  <tr><td id="navbg5" class="left_nav_closed" onClick="showsubmenu(5)"><div class="font1">下载中心</div></td></tr>
 		  <tr valign="top" id="submenu5" style="display: none">
 		    <td class="left_nav_bgshw tdbtmline" height="50">
-		    	<p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a href="@{/document/selectDocument?pageNum=1" target="main">文档查询</a></img></p>
-			  	<p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a href="@{/document/addDocument?flag=1" target="main">上传文档</a></img></p>
+		    	<p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/document/searchDocument/1}" target="main">文档查询</a></img></p>
+			  	<p class="left_nav_link"><img th:src="@{/images/left_nav_arrow.gif}">&nbsp;&nbsp;<a th:href="@{/document/toAddDocument}" target="main">上传文档</a></img></p>
 			</td>
 		  </tr>
 		  <tr><td height="2"></td></tr>
 		 
-		  <tr valign="top"><td height="100%" align="center"><div class="copycct"><br /><strong>技术支持：</strong><br><strong>广东为学教育有限公司</strong><br>Http://www.fkjava.org</div></td></tr>
+		  <tr valign="top"><td height="100%" align="center"><div class="copycct"><br /><strong>技术支持：</strong><br><strong>广西科技师范学院技术支持</strong><br>http://www.gxstnu.edu.cn/</div></td></tr>
 		  <tr><td height="10"><img th:src="@{/images/left_nav_bottom.gif}" height="10"/></td></tr>
 		  <tr><td height="10" bgcolor="#e5f0ff">&nbsp;</td></tr>
 		</table>

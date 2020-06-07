@@ -138,4 +138,40 @@ public class EmployeeController {
 
 
     }
+    @RequestMapping("/addEmployee")
+    public String addEmployee(Model model){
+
+        List<Dept> depts= restTemplate.getForObject(REST_URL_PREFIX_DEPT + "/dept/findDepts", List.class);
+        List<Dept> jobs= restTemplate.getForObject(REST_URL_PREFIX_JOB + "/job/findJobs", List.class);
+        model.addAttribute("jobs",jobs);
+        model.addAttribute("depts",depts);
+
+
+        return "employee/showAddEmployee";
+
+    }
+    @RequestMapping(value="/addEmployee",method = RequestMethod.POST)
+    public String add(@RequestParam Map<Object, Object> mapEmployee) {
+
+
+        restTemplate.put(REST_URL_PREFIX + "/employee/addEmployee",mapEmployee);
+
+
+
+
+
+        return "redirect:/employee/searchEmployee/1";
+
+    }
+
+    @RequestMapping(value = "/removeUser/{ids}")
+    public String removeUser(@PathVariable("ids") String ids){
+        System.out.println("这是编号"+ids);
+        restTemplate.delete(REST_URL_PREFIX + "/employee/delete/"+ids);
+
+
+        return "redirect:/employee/searchEmployee/1";
+
+
+    }
 }

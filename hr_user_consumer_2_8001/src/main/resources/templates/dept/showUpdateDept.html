@@ -60,7 +60,7 @@
     	 <form th:action="@{/dept/updateDept}" id="deptForm" method="post">
     	 	<!-- 隐藏表单，flag表示添加标记 -->
     	 	<input type="hidden" name="flag" value="2">
-    	 	<input type="hidden" name="id" value="${dept.deptId }">
+    	 	<input type="hidden" name="id" th:value="${dept.id }">
 		  <table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">
 		    <tr><td class="font3 fftd">
 		    	<table>

@@ -91,7 +91,11 @@ public class DocumentServiceImpl implements DocumentService {
 		documentDao.add(document);
 		
 	}
-	
-	
+
+	@Override
+	public void deleteByUid(Integer uid) {
+		documentDao.deleteByUid(uid);
+	}
+
 
 }

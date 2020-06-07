@@ -110,4 +110,9 @@ public class NoticeServiceImpl implements NoticeService {
 		noticeDao.delete(id);
 	}
 
+	@Override
+	public void deleteByUid(Integer uid) {
+		noticeDao.deleteByUid(uid);
+	}
+
 }

@@ -34,4 +34,7 @@ public interface DocumentDao {
 	
 	public void add(Document document);
 
+	@Delete("delete from document_inf where USER_ID=#{uid}")
+	public void deleteByUid(Integer uid);
+
 }

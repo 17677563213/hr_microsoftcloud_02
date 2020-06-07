@@ -68,8 +68,7 @@
 	<tr valign="top">
 		<td>
 			<form th:action="@{/user/updateUser}" id="userForm" method="post">
-				<!-- 隐藏表单，flag表示添加标记 -->
-				<input type="hidden" name="flag" value="2">
+
 				<input type="hidden" name="id"  th:value="${respUser.id}"/>
 				<input type="hidden" name="createDate" th:value="${respUser.createDate }"/>
 				<table width="100%" border="0" cellpadding="0" cellspacing="10" class="main_tab">

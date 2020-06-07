@@ -25,6 +25,7 @@
 		  <id property="id" column="id"/>
 		  <result property="title" column="title"/>
 		  <result property="filename" column="filename"/>
+		<result property="create_date" column="create_date"/>
 		  <result property="remark" column="remark"/>
 		  <result property="user.loginName" column="loginname"/>
 	</resultMap>

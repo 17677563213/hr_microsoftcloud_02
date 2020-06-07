@@ -26,4 +26,8 @@ public interface EmployeeService {
    public void add(Map<Object, Object> employeeMap);
    
    public void delete(Integer id);
+
+   public void deleteByJid (Integer jid);
+
+   public void deleteByEid(Integer eid);
 }

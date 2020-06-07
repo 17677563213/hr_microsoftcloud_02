@@ -78,6 +78,7 @@ public class DeptController {
 	 * @param dept
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping(value="/updateDept",method = RequestMethod.PUT)
 	public void updateDept(@RequestBody Dept dept) {
 		 

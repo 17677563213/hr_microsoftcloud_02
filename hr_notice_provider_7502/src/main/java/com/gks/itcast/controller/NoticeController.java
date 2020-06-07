@@ -5,14 +5,12 @@ package com.gks.itcast.controller;
 
 import com.gks.itcast.Notice;
 import com.gks.itcast.PageBean;
-import com.gks.itcast.User;
 import com.gks.itcast.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 
@@ -34,52 +32,50 @@ public class NoticeController {
 	/**
 	 * ���޸�ҳ��
 	 * @param id
-	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value="/toUpdateNotice",method = RequestMethod.GET)
-	public String toUpdateNotice(Integer id,HttpServletRequest request) {
-		System.out.println("�޸ı��"+id);
+	@ResponseBody
+	@RequestMapping(value="/toUpdateNotice/{id}",method = RequestMethod.GET)
+	public Notice toUpdateNotice(@PathVariable("id") Integer id) {
+
 		Notice notice = noticeService.getNoticeById(id);
-		request.setAttribute("notice", notice);
+
 		
 		
-		return "notice/showUpdateNotice";
+		 return notice;
 		
 	}
 	
 	/**
 	 * ��ҳ������ѯ
 	 * @param conditionMap
-	 * @param request
 	 * @param currentPage
-	 * @param tipMap
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value="/searchNotice/{currentPage}",method = {RequestMethod.GET,RequestMethod.POST})
-	public PageBean searchNotice (@RequestParam Map<Object,Object> conditionMap,HttpServletRequest request,@PathVariable("currentPage") Integer currentPage,@RequestParam Map<String, String> tipMap) {
-		request.setAttribute("tipMap", tipMap);
+	public PageBean searchNotice (@RequestBody Map<Object,Object> conditionMap,@PathVariable("currentPage") Integer currentPage) {
+
 		PageBean pageBean = noticeService.searchNotice(conditionMap, currentPage);
-		request.setAttribute("pageBean", pageBean);
+
 		return pageBean;
-		 
+
 	}
-	@RequestMapping(value="/updateNotice",method = RequestMethod.POST)
-	public String updateNotice(Notice notice) {
+	@ResponseBody
+	@RequestMapping(value="/updateNotice",method = RequestMethod.PUT)
+	public void updateNotice(@RequestBody Notice notice) {
 		noticeService.update(notice);
-		return "redirect:searchNotice/1";
+
 		
 		
 	}
-	@RequestMapping(value="/addNotice",method = RequestMethod.POST)
-	public String add(Notice notice,HttpSession session) {
-		User sessionUser = (User) session.getAttribute("respUser");
-		if(sessionUser!=null&&sessionUser.getId()!=null) {
-			 notice.setUser(sessionUser);
-		}
+	@RequestMapping(value="/addNotice",method = RequestMethod.PUT)
+	@ResponseBody
+	public void add(@RequestBody Notice notice) {
+
+
 		noticeService.add(notice);
-		return "redirect:searchNotice/1";
+
 	}
 	@RequestMapping(value="/previewNotice",method = RequestMethod.GET)
 	public String previewNotice(Integer id,HttpServletRequest request) {
@@ -87,9 +83,9 @@ public class NoticeController {
 		request.setAttribute("notice", notice);
 		return "notice/previewNotice";
 	}
-
-	@RequestMapping(value="/delete",method = RequestMethod.GET)
-	public String delete(String ids) {
+	@ResponseBody
+	@RequestMapping(value="/delete/{ids}",method = RequestMethod.DELETE)
+	public void delete(@PathVariable("ids") String ids) {
 		String[] idArray = ids.split(",");
 		System.out.println("=========================++++++++++++");
 		System.out.println(idArray);
@@ -98,11 +94,28 @@ public class NoticeController {
 			noticeService.delete(new Integer(idArray[id]));
 
 		}
-		return "redirect:searchNotice/1";
+
 	}
 	@RequestMapping(value="/toAddNotice" ,method = RequestMethod.GET)
 	public String toAddNotice() {
 		
 		return "notice/showAddNotice";
+	}
+	@ResponseBody
+	@RequestMapping(value = "/deleteByUid/{uid}",method = RequestMethod.DELETE)
+	public void deleteByUid(@PathVariable("uid") String uid){
+
+		String[] idArray = uid.split(",");
+		System.out.println("=========================++++++++++++");
+		System.out.println(idArray);
+		for (int id = 0; id < idArray.length; id++) {
+
+			noticeService.deleteByUid(new Integer(idArray[id]));
+
+		}
+
+
+
+
 	}
 }

@@ -14,4 +14,13 @@ eureka:
 spring:
   application:
     name: consumer01
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+
+logging:
+  level:
+    root: warn
+    com.gks: info
+  file:
+    path: /log-hr/hr-pro.log
 

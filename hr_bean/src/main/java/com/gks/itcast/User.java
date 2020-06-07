@@ -5,8 +5,6 @@ package com.gks.itcast;
  * 2020��3��28��
  */
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,7 +18,7 @@ public class User implements Serializable{
 	private String password;
 	
 	private String status;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+
 	private Date createDate;
 	
 	private String username;

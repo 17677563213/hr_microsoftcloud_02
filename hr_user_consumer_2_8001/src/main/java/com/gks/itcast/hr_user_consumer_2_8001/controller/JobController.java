@@ -22,6 +22,7 @@ public class JobController {
     private RestTemplate restTemplate;
 
     private final static  String REST_URL_PREFIX="http://microservice-jobService";
+    private final static  String REST_URL_PREFIX_EMPLOYEE="http://microservice-employeeService";
 
 
 
@@ -78,9 +79,12 @@ public class JobController {
         return "redirect:/job/selectJob/1";
     }
 
-    @RequestMapping(value = "/removeJob/{ids}")
-    public String removeUser(@PathVariable("ids") String ids){
+    @RequestMapping(value = "/removeJob/{ids}",method = RequestMethod.GET)
+    public String removeUser(@PathVariable("ids") String ids) throws InterruptedException {
         System.out.println("这是编号"+ids);
+        restTemplate.delete(REST_URL_PREFIX_EMPLOYEE+"/employee/deleteByJid/"+ids);
+
+        Thread.sleep(100);
         restTemplate.delete(REST_URL_PREFIX + "/job/removeJob/"+ids);
 
 

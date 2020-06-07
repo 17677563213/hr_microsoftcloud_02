@@ -29,4 +29,6 @@ public interface NoticeService {
 	
 	public void delete(Integer id);
 
+	public void deleteByUid(Integer uid);
+
 }

@@ -95,12 +95,12 @@ public class DeptController {
 	}
 	@RequestMapping(value="/addDept")
 	@ResponseBody
-	public boolean addDept(@RequestBody Dept dept) {
+	public void addDept(@RequestBody Dept dept) {
 
 		System.out.println(dept);
 
 		deptService.add(dept);
-		return true;
+
 	}
 	
 	@RequestMapping(value="/removeDept/{ids}",method = RequestMethod.DELETE)
